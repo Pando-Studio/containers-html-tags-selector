@@ -25,39 +25,3 @@ already personalizes templates of rows and columns of WPBakery Page Builder.
 3. Check if the current theme has no files named 'vc_row.php', 'vc_row_inner.php', 'vc_column.php', 'vc_column_inner.php'
 4. Activate the first plugin through the 'Plugins' menu in WordPress
 5. Activate the second plugin through the 'Plugins' menu in WordPress
-
-== Frequently Asked Questions ==
-
-= Can I use this plugin with any theme ? =
-
-Almost, you can use it only if your theme doesn't already personalizes the directory named 'vc_templates'.
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
-
-== Changelog ==
-
-
-== Upgrade Notice ==
-
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-`<?php code(); // goes in backticks ?>`
