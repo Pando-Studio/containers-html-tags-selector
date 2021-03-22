@@ -80,7 +80,6 @@ class Vc_Chtags
 		$this->dependency_plugin_path = 'js_composer/js_composer.php';
 
 		$this->load_dependencies();
-		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -91,7 +90,6 @@ class Vc_Chtags
 	 * Include the following files that make up the plugin:
 	 *
 	 * - Vc_Chtags_Loader. Orchestrates the hooks of the plugin.
-	 * - Vc_Chtags_i18n. Defines internationalization functionality.
 	 * - Vc_Chtags_Admin. Defines all hooks for the admin area.
 	 * - Vc_Chtags_Public. Defines all hooks for the public side of the site.
 	 *
@@ -111,12 +109,6 @@ class Vc_Chtags
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-vc-chtags-loader.php';
 
 		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-vc-chtags-i18n.php';
-
-		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-vc-chtags-admin.php';
@@ -134,23 +126,6 @@ class Vc_Chtags
 		if ($this->is_dependency_plugin_active($this->plugin_name, $this->plugin_path, $this->dependency_plugin_name, $this->dependency_plugin_path, 'vc-chtags')) {
 			$this->load_custom_vc();
 		}
-	}
-
-	/**
-	 * Define the locale for this plugin for internationalization.
-	 *
-	 * Uses the Vc_Chtags_i18n class in order to set the domain and to register the hook
-	 * with WordPress.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function set_locale()
-	{
-
-		$plugin_i18n = new Vc_Chtags_i18n();
-
-		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
 
 	/**
