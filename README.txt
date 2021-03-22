@@ -4,7 +4,7 @@ Tags: HTML Tags, Containers, SEO, Plugin WordPress, WPBakery Page Builder extens
 Requires at least: 1.0.0
 Tested up to: 1.0.0
 Stable tag: 1.0.0
-License: GPLv2 or later
+License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 With CHTAGS, you'll be able to choose your own HTML tags for each containers in your pages. This plugin is an extension for WPBarkery Page Builder.
