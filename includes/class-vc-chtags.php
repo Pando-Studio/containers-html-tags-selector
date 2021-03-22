@@ -277,21 +277,21 @@ class Vc_Chtags
 	{
 
 		$html_tags = array(
+			"div"   => 'div',
 			"header"   => 'header',
 			"nav"   => 'nav',
 			"main"   => 'main',
-			"article"   => 'article',
+			"footer"   => 'footer',
 			"section"   => 'section',
+			"article"   => 'article',
 			"aside"   => 'aside',
 			"details"   => 'details',
-			"figcaption"   => 'figcaption',
-			"figure"   => 'figure',
-			"mark"   => 'mark',
 			"summary"   => 'summary',
+			"figure"   => 'figure',
+			"figcaption"   => 'figcaption',
 			"time"   => 'time',
-			"footer"   => 'footer',
-			"small"   => 'small',
-			"div"   => 'div'
+			"mark"   => 'mark',
+			"small"   => 'small'
 		);
 
 		return $html_tags;
