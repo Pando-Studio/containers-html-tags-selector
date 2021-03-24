@@ -76,12 +76,37 @@ class Vc_Chtags
 		}
 		$this->plugin_name = 'vc-chtags';
 		$this->plugin_path = 'vc-chtags/vc-chtags.php';
-		$this->dependency_plugin_name = 'WPBakery Page Builder';
-		$this->dependency_plugin_path = 'js_composer/js_composer.php';
 
+		$this->dependency_plugin_name = '';
+		$this->dependency_plugin_path = '';
+		$this->dependency_theme_name = '';
+		$this->dependency_theme_path = '';
+
+		$this->load_dependency_plugin_path();
 		$this->load_dependencies();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+	}
+
+	function load_dependency_plugin_path()
+	{
+		# Check if the directory vc_templates already exists in the current theme
+		if (file_exists(get_stylesheet_directory() . '/vc_templates')) {
+			# Check if the current theme is salient his child
+			if (strcasecmp(wp_get_theme()->get('Name'), 'salient') == 0 || strcasecmp(wp_get_theme()->get('Template'), 'salient') == 0) {
+				# If yes, theme will be the dependency
+				$this->dependency_theme_name = wp_get_theme()->get('Name');
+				$this->dependency_theme_path = get_stylesheet_directory() . '/vc_templates';
+			} else {
+				# If not, plugin will be the dependency
+				$this->dependency_plugin_name = 'WPBakery Page Builder';
+				$this->dependency_plugin_path = 'js_composer/js_composer.php';
+			}
+		} else {
+			# If not, plugin will be the dependency
+			$this->dependency_plugin_name = 'WPBakery Page Builder';
+			$this->dependency_plugin_path = 'js_composer/js_composer.php';
+		}
 	}
 
 	/**
@@ -120,10 +145,11 @@ class Vc_Chtags
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-vc-chtags-public.php';
 
 		$this->loader = new Vc_Chtags_Loader();
+
 		/**
-		 * If the dependency plugin is loaded, continue running the current plugin
+		 * If the dependencies is loaded, continue running the current plugin
 		 */
-		if ($this->is_dependency_plugin_active($this->plugin_name, $this->plugin_path, $this->dependency_plugin_name, $this->dependency_plugin_path, 'vc-chtags')) {
+		if ($this->is_dependencies_active($this->plugin_name, $this->plugin_path, $this->dependency_plugin_name, $this->dependency_plugin_path, $this->dependency_theme_name, $this->dependency_theme_path)) {
 			$this->load_custom_vc();
 		}
 	}
@@ -205,47 +231,58 @@ class Vc_Chtags
 	}
 
 	/**
-	 * Verify if a plugin is active, if not deactivate the actual plugin an show an error
+	 * Verify if dependencies are active, if not deactivate the actual plugin an show an error
 	 * 
 	 * @since     1.0.0
 	 * @param     string     $my_plugin_name            The plugin name trying to activate. The name of this plugin
 	 * @param     string     $my_plugin_path            Path of the current plugin.
 	 * @param     string     $dependency_plugin_name    The dependency plugin name.
 	 * @param     string     $dependency_plugin_path    Path of the plugin to verify with the format 'dependency_plugin/dependency_plugin.php'
-	 * @param     string     $textdomain                Text domain to looking the localization (the translated strings)
-	 * @param     string     $version_to_check          Optional, verify certain version of the dependent plugin
+	 * @param     string     $dependency_theme_name     The dependency theme name.
+	 * @param     string     $dependency_theme_path     Path of the theme 'vc_templates' to verify with the format "get_stylesheet_directory() . '/vc_templates'"
 	 * @return    boolean                               Returns true if the dependcy plugin is loaded, if not return false
 	 */
-	function is_dependency_plugin_active($my_plugin_name, $my_plugin_path, $dependency_plugin_name, $dependency_plugin_path, $textdomain = '', $version_to_check = null)
+	function is_dependencies_active($my_plugin_name, $my_plugin_path, $dependency_plugin_name, $dependency_plugin_path, $dependency_theme_name, $dependency_theme_path)
 	{
-		# Needed to the function "deactivate_plugins" works
-		include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		if (!empty($dependency_theme_name) && !empty($dependency_theme_path) && empty($dependency_plugin_name) && empty($dependency_plugin_path)) {
+			echo '<div class="notice notice-warning is-dismissible"><p>' . __('Warning: You\'re using a salient theme with new folder \'vc_templates\'. Be sure to get the version wich able chtags to work. You can find it on \'wp-content/plugins/vc_chtags/includes/vc_templates/salient_vc_templates.zip\'', 'vc_chtags') . '</p></div>';
 
-		if (!is_plugin_active($dependency_plugin_path)) {
-			# Deactivate the current plugin
-			deactivate_plugins($my_plugin_path);
-
-			# Show an error alert on the admin area
-			add_action('admin_notices', function () use ($my_plugin_name, $dependency_plugin_name) {
-?>
-				<div class="updated error">
-					<p>
-						<?php
-						echo ('The plugin <strong>' . $my_plugin_name . '</strong> needs the plugin <strong>' . $dependency_plugin_name . '</strong> active');
-						echo '<br>';
-						echo '<strong>' . $my_plugin_name . ' has been deactivated</strong>'
-						?>
-					</p>
-				</div>
-<?php
-				if (isset($_GET['activate']))
-					unset($_GET['activate']);
-			});
-			return false;
-		} else {
 			if (isset($_GET['activate']))
 				unset($_GET['activate']);
+
 			return true;
+
+		} elseif (empty($dependency_theme_name) && empty($dependency_theme_path) && !empty($dependency_plugin_name) && !empty($dependency_plugin_path)) {
+
+			# Needed to the function "deactivate_plugins" works
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+			
+			if (!is_plugin_active($dependency_plugin_path)) {
+				# Deactivate the current plugin
+				deactivate_plugins($my_plugin_path);
+
+				# Show an error alert on the admin area
+				add_action('admin_notices', function () use ($my_plugin_name, $dependency_plugin_name) {
+?>
+					<div class="updated error">
+						<p>
+							<?php
+							echo ('The plugin <strong>' . $my_plugin_name . '</strong> needs the plugin <strong>' . $dependency_plugin_name . '</strong> active');
+							echo '<br>';
+							echo '<strong>' . $my_plugin_name . ' has been deactivated</strong>'
+							?>
+						</p>
+					</div>
+<?php
+					if (isset($_GET['activate']))
+						unset($_GET['activate']);
+				});
+				return false;
+			} else {
+				if (isset($_GET['activate']))
+					unset($_GET['activate']);
+				return true;
+			}
 		}
 	}
 
