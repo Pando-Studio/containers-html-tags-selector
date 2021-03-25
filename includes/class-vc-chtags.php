@@ -239,7 +239,7 @@ class Vc_Chtags
 	 * @param     string     $dependency_plugin_name    The dependency plugin name.
 	 * @param     string     $dependency_plugin_path    Path of the plugin to verify with the format 'dependency_plugin/dependency_plugin.php'
 	 * @param     string     $dependency_theme_name     The dependency theme name.
-	 * @param     string     $dependency_theme_path     Path of the theme 'vc_templates' to verify with the format "get_stylesheet_directory() . '/vc_templates'"
+	 * @param     string     $dependency_theme_path     Path of the directory 'vc_templates' in the current theme to verify with the format "get_stylesheet_directory() . '/vc_templates'"
 	 * @return    boolean                               Returns true if the dependcy plugin is loaded, if not return false
 	 */
 	function is_dependencies_active($my_plugin_name, $my_plugin_path, $dependency_plugin_name, $dependency_plugin_path, $dependency_theme_name, $dependency_theme_path)
